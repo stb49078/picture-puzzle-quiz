@@ -3,9 +3,12 @@ package at.stefanbauer.picturepuzzlequiz;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.util.Optional;
 
 public class ImageFinder {
-	public static File findImage(int index) {
-		return new File("./images/"+index+".png");
+
+	public static Optional<File> findImage(int index) {
+		File pngFile = new File("./images/" + index + ".png");
+		return Optional.of(pngFile);
 	}
 }
