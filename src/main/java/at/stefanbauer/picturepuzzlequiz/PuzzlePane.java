@@ -1,53 +1,62 @@
 package at.stefanbauer.picturepuzzlequiz;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.scene.control.Button;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 
 /**
  * big thanks to https://github.com/shemnon/javafx-gradle/blob/master/samples/Ensemble2/src/main/java/ensemble/samples/graphics/PuzzlePieces.java
  * for the original version of this part
  */
-public class PuzzlePieces extends Pane {
+public class PuzzlePane extends VBox {
+	private final List<Piece> pieces = new ArrayList<>();
 	private Timeline timeline;
 
-	public PuzzlePieces() throws MalformedURLException {
-		File imgFile = ImageFinder.findImage(3);
-		String localUrl = imgFile.toURI().toURL().toString();
-		Image image = new Image(localUrl);
+	public PuzzlePane() {
+		this.getChildren().add(new Text("Bitte Bild wählen"));
+		setAlignment(Pos.BASELINE_CENTER);
+	}
 
-		//Image image = new Image(getClass().getResourceAsStream("PuzzlePieces-picture.jpg"));
+	public void setImage(final int id, double width, double height) throws MalformedURLException {
+		this.getChildren().clear();
+
+		File imgFile = ImageFinder.findImage(id).orElseThrow(IllegalStateException::new);
+
+		String localUrl = imgFile.toURI().toURL().toString();
+		Image image = new Image(localUrl, width - 10, height - 50, true, false);
+
 		int numOfColumns = (int) (image.getWidth() / Piece.SIZE_X);
 		int numOfRows = (int) (image.getHeight() / Piece.SIZE_Y);
-		// create desk
+
 		final Desk desk = new Desk(numOfColumns, numOfRows);
-		// create puzzle pieces
-		final List<Piece> pieces = new ArrayList<>();
+
+		pieces.clear();
+
 		for (int col = 0; col < numOfColumns; col++) {
 			for (int row = 0; row < numOfRows; row++) {
 				int x = col * Piece.SIZE_X;
 				int y = row * Piece.SIZE_Y;
-				final Piece piece = new Piece(image, x, y, row > 0, col > 0,
-						row < numOfRows - 1, col < numOfColumns - 1,
-						desk.getWidth(), desk.getHeight());
+				final Piece piece = new Piece(image, x, y,
+				                              row > 0, col > 0,
+				                              row < numOfRows - 1, col < numOfColumns - 1);
 				pieces.add(piece);
 			}
 		}
+
 		desk.getChildren().addAll(pieces);
 		// create button box
-		Button shuffleButton = new Button("Shuffle");
+	/*	Button shuffleButton = new Button("Shuffle");
 		shuffleButton.setStyle("-fx-font-size: 2em;");
 		shuffleButton.setOnAction(actionEvent -> {
 			if (timeline != null) timeline.stop();
@@ -55,15 +64,15 @@ public class PuzzlePieces extends Pane {
 			for (final Piece piece : pieces) {
 				piece.setActive();
 				double shuffleX = Math.random() *
-						(desk.getWidth() - Piece.SIZE_X + 48f) -
-						24f - piece.getCorrectX();
+				                  (desk.getWidth() - Piece.SIZE_X + 48f) -
+				                  24f - piece.getCorrectX();
 				double shuffleY = Math.random() *
-						(desk.getHeight() - Piece.SIZE_Y + 30f) -
-						15f - piece.getCorrectY();
+				                  (desk.getHeight() - Piece.SIZE_Y + 30f) -
+				                  15f - piece.getCorrectY();
 				timeline.getKeyFrames().add(
 						new KeyFrame(Duration.seconds(1),
-								new KeyValue(piece.translateXProperty(), shuffleX),
-								new KeyValue(piece.translateYProperty(), shuffleY)));
+						             new KeyValue(piece.translateXProperty(), shuffleX),
+						             new KeyValue(piece.translateYProperty(), shuffleY)));
 			}
 			timeline.playFromStart();
 		});
@@ -76,8 +85,8 @@ public class PuzzlePieces extends Pane {
 				piece.setInactive();
 				timeline.getKeyFrames().add(
 						new KeyFrame(Duration.seconds(1),
-								new KeyValue(piece.translateXProperty(), 0),
-								new KeyValue(piece.translateYProperty(), 0)));
+						             new KeyValue(piece.translateXProperty(), 0),
+						             new KeyValue(piece.translateYProperty(), 0)));
 			}
 			timeline.playFromStart();
 		});
@@ -86,7 +95,26 @@ public class PuzzlePieces extends Pane {
 		// create vbox for desk and buttons
 		VBox vb = new VBox(10);
 		vb.getChildren().addAll(desk, buttonBox);
-		getChildren().addAll(vb);
+		getChildren().addAll(vb);*/
+
+		getChildren().add(desk);
 	}
 
+	public void revealPiece() {
+		List<Piece> collect = pieces.stream()
+				.filter(Piece::isPieceHidden)
+				.collect(Collectors.toList());
+		Collections.shuffle(collect);
+		collect.stream()
+				.findAny()
+				.ifPresent(Piece::show);
+
+	}
+
+	public void hidePiece() {
+		pieces.stream()
+				.filter(Piece::isPieceShown)
+				.min((o1, o2) -> ThreadLocalRandom.current().nextInt(-1, 2))
+				.ifPresent(Piece::hide);
+	}
 }
