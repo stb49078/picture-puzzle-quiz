@@ -5,12 +5,12 @@ import java.util.Optional;
 
 public class ImageFinder {
 
-	public static Optional<File> findImage(int index) {
-		File pngFile = new File("./images/" + index + ".png");
+	public static Optional<File> findImage(final int index) {
+		final File pngFile = new File("./images/" + index + ".png");
 		if (pngFile.exists())
 			return Optional.of(pngFile);
 
-		File jpgFile = new File("./images/" + index + ".jpg");
+		final File jpgFile = new File("./images/" + index + ".jpg");
 		if (jpgFile.exists())
 			return Optional.of(jpgFile);
 

@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 
@@ -28,16 +27,16 @@ public class PuzzlePane extends VBox {
 		setAlignment(Pos.BASELINE_CENTER);
 	}
 
-	public void setImage(final int id, double width, double height) throws MalformedURLException {
+	public void setImage(final int id, final double width, final double height) throws MalformedURLException {
 		this.getChildren().clear();
 
-		File imgFile = ImageFinder.findImage(id).orElseThrow(IllegalStateException::new);
+		final File imgFile = ImageFinder.findImage(id).orElseThrow(IllegalStateException::new);
 
-		String localUrl = imgFile.toURI().toURL().toString();
-		Image image = new Image(localUrl, width - 10, height - 50, true, false);
+		final String localUrl = imgFile.toURI().toURL().toString();
+		final Image image = new Image(localUrl, width - 10, height - 50, true, false);
 
-		int numOfColumns = (int) (image.getWidth() / Piece.SIZE_X);
-		int numOfRows = (int) (image.getHeight() / Piece.SIZE_Y);
+		final int numOfColumns = (int) (image.getWidth() / Piece.SIZE_X);
+		final int numOfRows = (int) (image.getHeight() / Piece.SIZE_Y);
 
 		final Desk desk = new Desk(numOfColumns, numOfRows);
 
@@ -45,12 +44,10 @@ public class PuzzlePane extends VBox {
 
 		for (int col = 0; col < numOfColumns; col++) {
 			for (int row = 0; row < numOfRows; row++) {
-				int x = col * Piece.SIZE_X;
-				int y = row * Piece.SIZE_Y;
-				final Piece piece = new Piece(image, x, y,
-				                              row > 0, col > 0,
-				                              row < numOfRows - 1, col < numOfColumns - 1);
-				pieces.add(piece);
+				pieces.add(new Piece(image,
+				                     col * Piece.SIZE_X, row * Piece.SIZE_Y,
+				                     row > 0, col > 0,
+				                     row < numOfRows - 1, col < numOfColumns - 1));
 			}
 		}
 
@@ -101,20 +98,23 @@ public class PuzzlePane extends VBox {
 	}
 
 	public void revealPiece() {
-		List<Piece> collect = pieces.stream()
-				.filter(Piece::isPieceHidden)
-				.collect(Collectors.toList());
+		final List<Piece> collect = pieces.stream()
+		                                  .filter(Piece::isPieceHidden)
+		                                  .collect(Collectors.toList());
 		Collections.shuffle(collect);
 		collect.stream()
-				.findAny()
-				.ifPresent(Piece::show);
+		       .findAny()
+		       .ifPresent(Piece::show);
 
 	}
 
 	public void hidePiece() {
-		pieces.stream()
-				.filter(Piece::isPieceShown)
-				.min((o1, o2) -> ThreadLocalRandom.current().nextInt(-1, 2))
-				.ifPresent(Piece::hide);
+		final List<Piece> collect = pieces.stream()
+		                                  .filter(piece -> !piece.isPieceHidden())
+		                                  .collect(Collectors.toList());
+		Collections.shuffle(collect);
+		collect.stream()
+		       .findAny()
+		       .ifPresent(Piece::hide);
 	}
 }

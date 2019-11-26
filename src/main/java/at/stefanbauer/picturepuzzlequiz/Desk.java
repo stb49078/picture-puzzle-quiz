@@ -7,13 +7,13 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
 public class Desk extends Pane {
-	Desk(int numOfColumns, int numOfRows) {
+	Desk(final int numOfColumns, final int numOfRows) {
 		setStyle("-fx-background-color: #000000; " +
 		         "-fx-border-color: #464646; " +
 		         "-fx-effect: innershadow( two-pass-box , rgba(0,0,0,0.8) , 15, 0.0 , 0 , 4 );");
 
-		double DESK_WIDTH = Piece.SIZE_X * numOfColumns;
-		double DESK_HEIGHT = Piece.SIZE_Y * numOfRows;
+		final double DESK_WIDTH = Piece.SIZE_X * numOfColumns;
+		final double DESK_HEIGHT = Piece.SIZE_Y * numOfRows;
 
 		setPrefSize(DESK_WIDTH, DESK_HEIGHT);
 		setMaxSize(DESK_WIDTH, DESK_HEIGHT);
@@ -21,7 +21,7 @@ public class Desk extends Pane {
 		autosize();
 
 		// create path for lines
-		Path grid = new Path();
+		final Path grid = new Path();
 		grid.setStroke(Color.rgb(70, 70, 70));
 		getChildren().add(grid);
 
