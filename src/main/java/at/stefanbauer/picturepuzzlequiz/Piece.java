@@ -1,6 +1,8 @@
 package at.stefanbauer.picturepuzzlequiz;
 
+import javafx.animation.FadeTransition;
 import javafx.scene.Parent;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -8,6 +10,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 /**
  * Node that represents a puzzle piece
@@ -25,6 +28,9 @@ public class Piece extends Parent {
 	private final double pieceWidth;
 	private final double pieceHeight;
 	private boolean pieceShown = false;
+	private FadeTransition fadeIn = new FadeTransition(
+			Duration.millis(1000)
+	);
 
 	public Piece(final Image image,
 	             final double pieceWidth, final double pieceHeight,
@@ -58,8 +64,15 @@ public class Piece extends Parent {
 
 		setCache(true);
 		setInactive();
-
+		setEffect(new DropShadow());
 		setPieceShown(false);
+
+		fadeIn.setNode(this);
+
+		fadeIn.setFromValue(0.0);
+		fadeIn.setToValue(1.0);
+		fadeIn.setCycleCount(1);
+		fadeIn.setAutoReverse(false);
 	}
 
 	private Shape createPiece() {
@@ -144,7 +157,7 @@ public class Piece extends Parent {
 
 	/*public void setActive() {
 		setDisable(false);
-		setEffect(new DropShadow());
+
 		toFront();
 	}*/
 
@@ -166,9 +179,12 @@ public class Piece extends Parent {
 		return pieceShown;
 	}*/
 
-	public void setPieceShown(final boolean pieceShown) {//TODO fade transition
+	public void setPieceShown(final boolean pieceShown) {
 		this.pieceShown = pieceShown;
 		imageView.setVisible(pieceShown);
+		if (pieceShown) {
+			fadeIn.playFromStart();
+		}
 	}
 
 	public boolean isPieceHidden() {

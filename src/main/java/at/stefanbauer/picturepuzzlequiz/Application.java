@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 
 import java.net.MalformedURLException;
 
+/**
+ * "c:\Program Files\Java\jdk1.8.0_181\bin\java.exe" -jar picture-puzzle-quiz-1.0-SNAPSHOT.jar
+ */
 public class Application extends javafx.application.Application {
 	private PuzzlePane puzzlePane;
 	private VBox content;
@@ -63,6 +66,14 @@ public class Application extends javafx.application.Application {
 			final Menu menuPieceSize = new Menu("Teilegröße");
 			menuBar.getMenus().add(menuPieceSize);
 			{
+				final MenuItem itemSize = new MenuItem("130x130px");
+				menuPieceSize.getItems().add(itemSize);
+				itemSize.setOnAction(event -> {
+					puzzlePane.setPieceSize(130, 130);
+					puzzlePane.update(content.getWidth(), content.getHeight());
+				});
+			}
+			{
 				final MenuItem itemSize = new MenuItem("100x100px");
 				menuPieceSize.getItems().add(itemSize);
 				itemSize.setOnAction(event -> {
@@ -71,18 +82,18 @@ public class Application extends javafx.application.Application {
 				});
 			}
 			{
-				final MenuItem itemSize = new MenuItem("80x60px");
+				final MenuItem itemSize = new MenuItem("80x80px");
 				menuPieceSize.getItems().add(itemSize);
 				itemSize.setOnAction(event -> {
-					puzzlePane.setPieceSize(80, 60);
+					puzzlePane.setPieceSize(80, 80);
 					puzzlePane.update(content.getWidth(), content.getHeight());
 				});
 			}
 			{
-				final MenuItem itemSize = new MenuItem("60x60px");
+				final MenuItem itemSize = new MenuItem("80x60px");
 				menuPieceSize.getItems().add(itemSize);
 				itemSize.setOnAction(event -> {
-					puzzlePane.setPieceSize(60, 60);
+					puzzlePane.setPieceSize(80, 60);
 					puzzlePane.update(content.getWidth(), content.getHeight());
 				});
 			}

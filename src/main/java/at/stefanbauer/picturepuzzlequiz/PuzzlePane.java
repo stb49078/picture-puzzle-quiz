@@ -46,7 +46,7 @@ public class PuzzlePane extends VBox {
 	public void update(final double maxDeskWidth, final double maxDeskHeight) {
 		if (imageURL == null) return;
 
-		final Image image = new Image(imageURL, maxDeskWidth - 10, maxDeskHeight - 50, true, false);
+		final Image image = new Image(imageURL, maxDeskWidth - 5, maxDeskHeight - 20, true, false);
 		this.getChildren().clear();
 
 		final int numOfColumns = (int) (image.getWidth() / pieceWidth);
@@ -90,7 +90,7 @@ public class PuzzlePane extends VBox {
 		setPieceWidth(pieceWidth);
 	}
 
-	public void setRevealStrategy(RevealStrategy revealStrategy) {
+	public void setRevealStrategy(final RevealStrategy revealStrategy) {
 		this.revealStrategy = revealStrategy;
 	}
 }

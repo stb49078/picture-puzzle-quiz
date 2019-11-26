@@ -10,6 +10,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -28,86 +30,100 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
-                    <mainClass>Application</mainClass>
+                    <mainClass>at.stefanbauer.picturepuzzlequiz.Application</mainClass>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <release>11</release>
-                </configuration>
-            </plugin>
-
-            <!-- LAUNCH4J -->
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.25</version>
-                <executions>
-                    <execution>
-                        <id>l4j-clui</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <headerType>console</headerType>
-                            <jar>target/picture-puzzle-quiz-1.0-SNAPSHOT.jar</jar>
-                            <outfile>target/picture-puzzle-quiz.exe</outfile>
-                            <downloadUrl>http://java.com/download</downloadUrl>
-                            <classPath>
-                                <mainClass>de.thz.cameracontrol.server.Server</mainClass>
-                            </classPath>
-                            <jre>
-                                <bundledJre64Bit>false</bundledJre64Bit>
-                                <bundledJreAsFallback>false</bundledJreAsFallback>
-                                <minVersion>1.8.0</minVersion>
-                                <jdkPreference>preferJre</jdkPreference>
-                                <runtimeBits>32</runtimeBits>
-                            </jre>
-                            <versionInfo>
-                                <fileVersion>1.0.0.0</fileVersion>
-                                <txtFileVersion>${project.version}</txtFileVersion>
-                                <fileDescription>${project.name}</fileDescription>
-                                <copyright>C</copyright>
-                                <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>1.0.0.0</txtProductVersion>
-                                <productName>${project.name}</productName>
-                                <internalName>AppName</internalName>
-                                <originalFilename>CameraControl.exe</originalFilename>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.1</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>de.thz.cameracontrol.server.Server</mainClass>
+                            <mainClass>at.stefanbauer.picturepuzzlequiz.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attached</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-            <!-- LAUNCH4J ENDE -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <!--&lt;!&ndash; LAUNCH4J &ndash;&gt;-->
+            <!--<plugin>-->
+            <!--<groupId>com.akathist.maven.plugins.launch4j</groupId>-->
+            <!--<artifactId>launch4j-maven-plugin</artifactId>-->
+            <!--<version>1.7.25</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>l4j-clui</id>-->
+            <!--<phase>package</phase>-->
+            <!--<goals>-->
+            <!--<goal>launch4j</goal>-->
+            <!--</goals>-->
+            <!--<configuration>-->
+            <!--<headerType>console</headerType>-->
+            <!--<jar>target/picture-puzzle-quiz-1.0-SNAPSHOT-jar-with-dependencies.jar</jar>-->
+            <!--&lt;!&ndash; <jar>target/picture-puzzle-quiz-1.0-SNAPSHOT.jar</jar>&ndash;&gt;-->
+            <!--<outfile>target/picture-puzzle-quiz.exe</outfile>-->
+            <!--<downloadUrl>http://java.com/download</downloadUrl>-->
+            <!--<classPath>-->
+            <!--<mainClass>at.stefanbauer.picturepuzzlequiz.Application</mainClass>-->
+            <!--</classPath>-->
+            <!--<jre>-->
+            <!--<bundledJre64Bit>true</bundledJre64Bit>-->
+            <!--<bundledJreAsFallback>false</bundledJreAsFallback>-->
+            <!--<minVersion>11.0</minVersion>-->
+            <!--<jdkPreference>preferJre</jdkPreference>-->
+            <!--<runtimeBits>64/32</runtimeBits>-->
+            <!--<path>C:\Program Files\Java\jdk-11.0.1</path>-->
+            <!--</jre>-->
+            <!--&lt;!&ndash;  <versionInfo>-->
+            <!--<fileVersion>1.0.0.0</fileVersion>-->
+            <!--<txtFileVersion>${project.version}</txtFileVersion>-->
+            <!--<fileDescription>${project.name}</fileDescription>-->
+            <!--<copyright>C</copyright>-->
+            <!--<productVersion>1.0.0.0</productVersion>-->
+            <!--<txtProductVersion>1.0.0.0</txtProductVersion>-->
+            <!--<productName>${project.name}</productName>-->
+            <!--<internalName>AppName</internalName>-->
+            <!--<originalFilename>CameraControl.exe</originalFilename>-->
+            <!--</versionInfo>-->
+            <!--&ndash;&gt; </configuration>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-assembly-plugin</artifactId>-->
+            <!--<version>2.4</version>-->
+            <!--<configuration>-->
+            <!--<descriptorRefs>-->
+            <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+            <!--</descriptorRefs>-->
+            <!--<archive>-->
+            <!--<manifest>-->
+            <!--<mainClass>at.stefanbauer.picturepuzzlequiz.Application</mainClass>-->
+            <!--</manifest>-->
+            <!--</archive>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>assembly</id>-->
+            <!--<phase>package</phase>-->
+            <!--<goals>-->
+            <!--<goal>attached</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
+            <!--&lt;!&ndash; LAUNCH4J ENDE &ndash;&gt;-->
         </plugins>
     </build>
 </project>
