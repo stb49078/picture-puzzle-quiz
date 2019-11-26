@@ -19,7 +19,9 @@ public class Application extends javafx.application.Application {
 
 	public void setImage(final int id) {
 		try {
-			puzzlePane.setImage(id, content.getWidth(), content.getHeight());
+			puzzlePane.setImage(id);
+			puzzlePane.update(content.getWidth(), content.getHeight());
+
 		} catch (final MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -27,9 +29,8 @@ public class Application extends javafx.application.Application {
 
 	@Override
 	public void start(final Stage stage) {
-		stage.setTitle("blub");
-		//stage.initStyle(StageStyle.UTILITY);
-		//TODO stage.setFullScreen(true);
+		stage.setTitle("https://github.com/stb49078/picture-puzzle-quiz");
+		stage.setFullScreen(true);
 		stage.setMaximized(true);
 
 		content = new VBox();
@@ -44,26 +45,68 @@ public class Application extends javafx.application.Application {
 		                 "-fx-border-color: #000000; " +
 		                 "-fx-text-fill: #cccccc");
 
-		final Menu menuPicture = new Menu("Bild");
+		{
+			final Menu menuPicture = new Menu("Bild");
 
-		for (int i = 1; i <= 20; i++) {
-			if (ImageFinder.findImage(i).isPresent()) {
-				final MenuItem imageItem = new MenuItem("Bild " + i);
-				final int finalI = i;
-				imageItem.setOnAction(event -> setImage(finalI));
-				menuPicture.getItems().add(imageItem);
+			for (int i = 1; i <= 20; i++) {
+				if (ImageFinder.findImage(i).isPresent()) {
+					final MenuItem imageItem = new MenuItem("Bild " + i);
+					final int finalI = i;
+					imageItem.setOnAction(event -> setImage(finalI));
+					menuPicture.getItems().add(imageItem);
+				}
+			}
+
+			menuBar.getMenus().add(menuPicture);
+		}
+		{
+			final Menu menuPieceSize = new Menu("Teilegröße");
+			menuBar.getMenus().add(menuPieceSize);
+			{
+				final MenuItem itemSize = new MenuItem("100x100px");
+				menuPieceSize.getItems().add(itemSize);
+				itemSize.setOnAction(event -> {
+					puzzlePane.setPieceSize(100, 100);
+					puzzlePane.update(content.getWidth(), content.getHeight());
+				});
+			}
+			{
+				final MenuItem itemSize = new MenuItem("80x60px");
+				menuPieceSize.getItems().add(itemSize);
+				itemSize.setOnAction(event -> {
+					puzzlePane.setPieceSize(80, 60);
+					puzzlePane.update(content.getWidth(), content.getHeight());
+				});
+			}
+			{
+				final MenuItem itemSize = new MenuItem("60x60px");
+				menuPieceSize.getItems().add(itemSize);
+				itemSize.setOnAction(event -> {
+					puzzlePane.setPieceSize(60, 60);
+					puzzlePane.update(content.getWidth(), content.getHeight());
+				});
 			}
 		}
+		{
+			final Menu revealStrategyMenu = new Menu("Aufdecken");
+			menuBar.getMenus().add(revealStrategyMenu);
+			for (final RevealStrategy revealStrategy : RevealStrategy.values()) {
+				final MenuItem revealStrategyMenuItem = new MenuItem(revealStrategy.getCaption());
+				revealStrategyMenu.getItems().add(revealStrategyMenuItem);
+				revealStrategyMenuItem.setOnAction(event -> {
+					puzzlePane.setRevealStrategy(revealStrategy);
+					puzzlePane.update(content.getWidth(), content.getHeight());
+				});
+			}
+		}
+		{
+			final Menu exitMenu = new Menu("Beenden");
+			menuBar.getMenus().add(exitMenu);
 
-		menuBar.getMenus().add(menuPicture);
-
-		final Menu exitMenu = new Menu("Beenden");
-		menuBar.getMenus().add(exitMenu);
-
-		final MenuItem exitMenuItem = new MenuItem("bis zum nächsten mal");
-		exitMenuItem.setOnAction(event -> endApplication());
-		exitMenu.getItems().add(exitMenuItem);
-
+			final MenuItem exitMenuItem = new MenuItem("Freibier für den Programmierer!!!");
+			exitMenuItem.setOnAction(event -> endApplication());
+			exitMenu.getItems().add(exitMenuItem);
+		}
 		content.getChildren().add(menuBar);
 		content.getChildren().add(puzzlePane);
 
@@ -72,12 +115,16 @@ public class Application extends javafx.application.Application {
 		scene.setOnKeyPressed(event -> {
 			switch (event.getCode()) {
 				case ENTER:
+					puzzlePane.togglePaneVisibility();
+					break;
 				case SPACE:
 					puzzlePane.revealPiece();
 					break;
 				case BACK_SPACE:
 					puzzlePane.hidePiece();
 					break;
+				case END:
+					puzzlePane.revealAllPieces();
 			}
 		});
 
