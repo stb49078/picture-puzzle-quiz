@@ -34,11 +34,9 @@ public class Application extends javafx.application.Application {
 		//TODO stage.setFullScreen(true);
 		stage.setMaximized(true);
 
-
 		content = new VBox();
 		puzzlePane = new PuzzlePane();
 		MenuBar menuBar = new MenuBar();
-
 
 		content.setStyle("-fx-background-color: #000000; " +
 		                 "-fx-border-color: #000000; "+
@@ -49,25 +47,21 @@ public class Application extends javafx.application.Application {
 		                 "-fx-text-fill: #cccccc");
 
 		Menu menuPicture = new Menu("Bild");
-		boolean imageSet = false;
+
 		for (int i = 1; i <= 20; i++) {
 			if (ImageFinder.findImage(i).isPresent()) {
-				if (!imageSet) {
-					//TODO on timeout! setImage(i);
-					imageSet = true;
-				}
-
 				MenuItem imageItem = new MenuItem("Bild " + i);
 				int finalI = i;
 				imageItem.setOnAction(event -> setImage(finalI));
 				menuPicture.getItems().add(imageItem);
 			}
 		}
+
 		menuBar.getMenus().add(menuPicture);
 
 		Menu exitMenu = new Menu("Beenden");
 		menuBar.getMenus().add(exitMenu);
-		MenuItem exitMenuItem = new MenuItem("baba");
+		MenuItem exitMenuItem = new MenuItem("bis zum nächsten mal");
 		exitMenuItem.setOnAction(event -> endApplication());
 		exitMenu.getItems().add(exitMenuItem);
 
